@@ -13,8 +13,9 @@ const map = new ol.Map({
         })
     ],
     view: new ol.View({
-        center: [-70.0, -35.0], // Initial center coordinates [longitude, latitude] for Chile
-        zoom: 6 // Initial zoom level
+        // Set an initial view. The fit function will override this later.
+        center: ol.proj.fromLonLat([-70.0, -35.0]),
+        zoom: 6
     })
 });
 
@@ -94,9 +95,9 @@ const pointLayer = new ol.layer.Vector({
         } else if (shape && shape.toLowerCase() === 'square') {
             pointStyle = new ol.style.Style({
                 image: new ol.style.RegularShape({
-                    points: 4, // Number of points for a square
+                    points: 4,
                     radius: pointSize,
-                    angle: Math.PI / 4, // Rotate by 45 degrees to make it a square
+                    angle: Math.PI / 4, // Rotar para que parezca un cuadrado
                     fill: new ol.style.Fill({
                         color: fillColor
                     }),
@@ -106,38 +107,8 @@ const pointLayer = new ol.layer.Vector({
                     })
                 })
             });
-        } else if (shape && shape.toLowerCase() === 'triangle') {
-            pointStyle = new ol.style.Style({
-                image: new ol.style.RegularShape({
-                    points: 3, // Number of points for a triangle
-                    radius: pointSize,
-                    rotateWithView: true,
-                    fill: new ol.style.Fill({
-                        color: fillColor
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: strokeColor,
-                        width: 1
-                    })
-                })
-            });
-        } else if (shape && shape.toLowerCase() === 'star') {
-            pointStyle = new ol.style.Style({
-                image: new ol.style.RegularShape({
-                    points: 5, // Number of points for a star
-                    radius1: pointSize, // Outer radius
-                    radius2: pointSize / 2.5, // Inner radius (adjust for star sharpness)
-                    angle: 0, // No rotation needed for a typical star
-                    fill: new ol.style.Fill({
-                        color: fillColor
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: strokeColor,
-                        width: 1
-                    })
-                })
-            });
-        } else { // Default to circle if shape is not recognized or not specified
+        } else {
+            // Default to a circle if shape is not specified or recognized
             pointStyle = new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: pointSize,
@@ -156,7 +127,6 @@ const pointLayer = new ol.layer.Vector({
 });
 
 
-// Create a vector source for your data_centers data
 const dataCenterSource = new ol.source.Vector({
     format: new ol.format.GeoJSON({
         dataProjection: 'EPSG:4326',
@@ -166,17 +136,17 @@ const dataCenterSource = new ol.source.Vector({
     wrapX: false
 });
 
-// Create a vector layer for data_centers
 const dataCenterLayer = new ol.layer.Vector({
     source: dataCenterSource,
     style: function(feature) {
-        const shape = feature.get('shape'); // NEW: Get shape property
+        const shape = feature.get('shape');
         const color = feature.get('color');
         const size = feature.get('size');
+        const opacity = feature.get('opacity');
 
-        let fillColor = color || '#FF4500'; // Use GeoJSON color or default to orange
-        let strokeColor = '#333'; // Dark border
-        let pointSize = size || 8; // Use GeoJSON size or default to 8
+        let fillColor = color || '#5DADE2'; // Default color for data centers
+        let strokeColor = '#333';
+        let pointSize = size || 8; // Default size for data centers
 
         let dataCenterStyle;
 
@@ -199,51 +169,23 @@ const dataCenterLayer = new ol.layer.Vector({
                 image: new ol.style.RegularShape({
                     points: 4,
                     radius: pointSize,
+                    angle: Math.PI / 4, // Rotar para que parezca un cuadrado
+                    fill: new ol.style.Fill({
+                        color: fillColor
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: strokeColor,
+                        width: 1
+                    })
+                })
+            });
+        } else {
+            // Default to a square if shape is not specified or recognized
+            dataCenterStyle = new ol.style.Style({
+                image: new ol.style.RegularShape({
+                    points: 4,
+                    radius: pointSize,
                     angle: Math.PI / 4,
-                    fill: new ol.style.Fill({
-                        color: fillColor
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: strokeColor,
-                        width: 1
-                    })
-                })
-            });
-        } else if (shape && shape.toLowerCase() === 'triangle') {
-            dataCenterStyle = new ol.style.Style({
-                image: new ol.style.RegularShape({
-                    points: 3,
-                    radius: pointSize,
-                    rotateWithView: true,
-                    fill: new ol.style.Fill({
-                        color: fillColor
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: strokeColor,
-                        width: 1
-                    })
-                })
-            });
-        } else if (shape && shape.toLowerCase() === 'star') {
-            dataCenterStyle = new ol.style.Style({
-                image: new ol.style.RegularShape({
-                    points: 5,
-                    radius1: pointSize,
-                    radius2: pointSize / 2.5,
-                    angle: 0,
-                    fill: new ol.style.Fill({
-                        color: fillColor
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: strokeColor,
-                        width: 1
-                    })
-                })
-            });
-        } else { // Default to circle if shape is not recognized or not specified
-            dataCenterStyle = new ol.style.Style({
-                image: new ol.style.Circle({
-                    radius: pointSize,
                     fill: new ol.style.Fill({
                         color: fillColor
                     }),
@@ -258,7 +200,6 @@ const dataCenterLayer = new ol.layer.Vector({
     }
 });
 
-// Create a vector source for your land_cables data
 const landCableSource = new ol.source.Vector({
     format: new ol.format.GeoJSON({
         dataProjection: 'EPSG:4326',
@@ -268,40 +209,173 @@ const landCableSource = new ol.source.Vector({
     wrapX: false
 });
 
-// Create a vector layer for land_cables
 const landCableLayer = new ol.layer.Vector({
     source: landCableSource,
     style: function(feature) {
-        const color = feature.get('color');
-        const width = feature.get('width');
-        const geojsonLineDash = feature.get('lineDash'); // Get lineDash property
+        const geojsonColor = feature.get('color');
+        const geojsonWidth = feature.get('width');
+        const geojsonLineDash = feature.get('lineDash');
 
-        const lineDash = geojsonLineDash || undefined; // Use undefined if not present
+        const color = geojsonColor || 'rgba(0, 0, 255, 0.7)';
+        const width = geojsonWidth || 3;
+        const lineDash = geojsonLineDash || undefined;
 
         return new ol.style.Style({
             stroke: new ol.style.Stroke({
-                color: color || 'rgba(128, 128, 128, 0.7)', // Default grey
-                width: width || 2,
-                lineDash: lineDash // Apply lineDash here
+                color: color,
+                width: width,
+                lineDash: lineDash
             })
         });
     }
 });
 
-
-// Add layers to the map in the desired order (base map first, then vector layers)
+// Agrega las capas al mapa en un orden específico para que los puntos estén encima de las líneas
 map.addLayer(cableLayer);
+map.addLayer(landCableLayer);
 map.addLayer(pointLayer);
 map.addLayer(dataCenterLayer);
-map.addLayer(landCableLayer);
+
+
+// === INFO PANEL LOGIC ===
+const infoPanel = document.getElementById('info-panel');
+const closePanelBtn = document.querySelector('.close-panel');
+const panelContent = document.getElementById('panel-content');
+let selectedFeature = null;
+
+const translationDict = {
+    'name': 'Nombre',
+    'type': 'Tipo',
+    'empresa': 'Empresa',
+    'shape': 'Forma',
+    'color': 'Color',
+    'size': 'Tamaño',
+    'address': 'Dirección',
+    'pue': 'Eficiencia Energética (PUE)',
+    'wue': 'Eficiencia Hídrica (WUE)',
+    'dimensiones': 'Dimensiones Físicas',
+    'tecnologias': 'Tecnologías Empleadas',
+    'sistemas_refrigeracion': 'Sistemas de Refrigeración',
+    'consumo_agua': 'Consumo de Agua',
+    'uso_suelo': 'Uso de Suelo',
+    'emisiones': 'Datos sobre Emisiones',
+    'source': 'Fuente',
+    'reference_link': 'Enlace de Referencia',
+    'length_km': 'Longitud (km)',
+    'image': 'Imagen',
+    'width': 'Ancho'
+};
+
+const excludedKeys = ['name', 'type', 'shape', 'color', 'size', 'opacity', 'geometry', 'width'];
+
+function getFormattedFeatureInfo(feature) {
+    const properties = feature.getProperties();
+    let content = '';
+
+    // Handle title and subtitle
+    const name = properties['name'] || 'Información del Elemento';
+    const type = properties['type'] || 'Elemento';
+    content += `<h2>${name}</h2>`;
+    content += `<h4 class="subtitle">${type}</h4>`;
+
+    // Loop through all properties and build the list
+    for (const key in properties) {
+        const lowercaseKey = key.toLowerCase();
+        // Exclude properties based on the excludedKeys array and null/empty values
+        if (properties.hasOwnProperty(key) && !excludedKeys.includes(lowercaseKey) && properties[key]) {
+            // Get the translated key from the dictionary, or format it if not found
+            const translatedKey = translationDict[lowercaseKey] || key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            let value = properties[key];
+
+            // Check for image links and format them as an <img> tag
+            if (lowercaseKey === 'image' && value) {
+                if (typeof value === 'string' && value.startsWith('http')) {
+                    content += `<div class="info-item image-container"><img src="${value}" alt="${name}"></div>`;
+                }
+            } else if (lowercaseKey === 'reference_link' && value) {
+                // Check for reference link and format as a clickable link
+                content += `<div class="info-item"><strong>${translatedKey}:</strong> <a href="${value}" target="_blank" rel="noopener noreferrer">Ver Referencia</a></div>`;
+            } else {
+                // If the value is a number or string, format it as a simple list item
+                if (value !== null && value !== undefined && value !== '') {
+                    content += `<div class="info-item"><strong>${translatedKey}:</strong> ${value}</div>`;
+                }
+            }
+        }
+    }
+    return content;
+}
+
+closePanelBtn.addEventListener('click', () => {
+    infoPanel.classList.remove('open');
+    // We can also clear the selected feature to be able to select it again
+    selectedFeature = null;
+});
+
+// Event listener for map clicks to show the info panel
+map.on('click', function(evt) {
+    const feature = map.forEachFeatureAtPixel(evt.pixel, function(feature) {
+        return feature;
+    });
+
+    if (feature) {
+        selectedFeature = feature;
+        const info = getFormattedFeatureInfo(selectedFeature);
+        panelContent.innerHTML = info;
+        infoPanel.classList.add('open');
+    } else {
+        // Only close the panel without changing content if no feature is clicked
+        if (infoPanel.classList.contains('open')) {
+            infoPanel.classList.remove('open');
+        }
+    }
+});
+
+// === TOOLTIP LOGIC ===
+const tooltipElement = document.getElementById('tooltip');
+const tooltip = new ol.Overlay({
+    element: tooltipElement,
+    offset: [10, 0],
+    positioning: 'bottom-left'
+});
+map.addOverlay(tooltip);
+
+map.on('pointermove', function(evt) {
+    if (evt.dragging) {
+        return;
+    }
+    const pixel = map.getEventPixel(evt.originalEvent);
+    const hit = map.hasFeatureAtPixel(pixel);
+    map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+
+    const feature = map.forEachFeatureAtPixel(evt.pixel, function(feature) {
+        return feature;
+    });
+
+    if (feature) {
+        const properties = feature.getProperties();
+        const name = properties['name'] || 'Elemento';
+        tooltipElement.innerHTML = name;
+        tooltip.setPosition(evt.coordinate);
+        tooltipElement.style.display = 'block';
+    } else {
+        tooltipElement.style.display = 'none';
+    }
+});
+
 
 // === LAYER TOGGLE LOGIC ===
-// Ensure the elements are properly selected after the DOM is loaded
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Ensure all elements are properly selected after the DOM is loaded
     const toggleCables = document.getElementById('toggle-cables');
     const togglePoints = document.getElementById('toggle-points');
     const toggleDataCenters = document.getElementById('toggle-data-centers');
     const toggleLandCables = document.getElementById('toggle-land-cables');
+    
+    const toggleLayerControlsButton = document.getElementById('toggle-layer-controls');
+    const layerControls = document.querySelector('.layer-controls');
+
 
     // Set initial visibility based on checkbox state
     // We set 'checked' in HTML, so they should be visible initially.
@@ -310,300 +384,91 @@ document.addEventListener('DOMContentLoaded', function() {
     dataCenterLayer.setVisible(toggleDataCenters.checked);
     landCableLayer.setVisible(toggleLandCables.checked);
 
+
     // Add event listeners
-    toggleCables.addEventListener('change', function(event) {
-        cableLayer.setVisible(event.target.checked);
+    toggleCables.addEventListener('change', function() {
+        cableLayer.setVisible(this.checked);
     });
 
-    togglePoints.addEventListener('change', function(event) {
-        pointLayer.setVisible(event.target.checked);
+    togglePoints.addEventListener('change', function() {
+        pointLayer.setVisible(this.checked);
     });
 
-    toggleDataCenters.addEventListener('change', function(event) {
-        dataCenterLayer.setVisible(event.target.checked);
+    toggleDataCenters.addEventListener('change', function() {
+        dataCenterLayer.setVisible(this.checked);
     });
 
-    toggleLandCables.addEventListener('change', function(event) {
-        landCableLayer.setVisible(event.target.checked);
+    toggleLandCables.addEventListener('change', function() {
+        landCableLayer.setVisible(this.checked);
     });
-
-    // === NEW LAYER CONTROLS TOGGLE LOGIC (Mobile-only) ===
-    const toggleLayerControlsButton = document.getElementById('toggle-layer-controls');
-    const layerControlsPanel = document.getElementById('layer-controls');
-
+    
+    // CORRECTED: Logic for toggling the layer panel and hiding the button
     if (toggleLayerControlsButton) {
-        toggleLayerControlsButton.addEventListener('click', function(event) {
-            // Prevent the click from propagating to the map
-            event.stopPropagation();
-            
-            // Toggle the 'open' class on the layer controls panel
-            layerControlsPanel.classList.toggle('open');
-            
-            // Explicitly hide the button when the panel is open
-            if (layerControlsPanel.classList.contains('open')) {
-                toggleLayerControlsButton.style.display = 'none';
-            } else {
-                toggleLayerControlsButton.style.display = 'block';
+        toggleLayerControlsButton.addEventListener('click', function() {
+            if (layerControls) {
+                const isPanelOpen = layerControls.classList.toggle('open');
+                // Hide the button when the panel is open, show it when closed
+                toggleLayerControlsButton.classList.toggle('hidden', isPanelOpen);
             }
         });
     }
-    // === END OF NEW LOGIC ===
 
-    // === INFO PANEL LOGIC ===
-    const infoPanel = document.getElementById('info-panel');
-    const closePanelButton = document.getElementById('close-panel');
-    const panelContent = document.getElementById('panel-content');
+    // New, more robust logic to fit the map view to all features on load
+    const allSources = [cableSource, pointSource, dataCenterSource, landCableSource];
+    const sourcesToWaitFor = allSources.length;
+    let sourcesLoaded = 0;
 
-    closePanelButton.addEventListener('click', function() {
-        infoPanel.classList.remove('open');
-        panelContent.innerHTML = '<p>Haz click en un punto o cable para ver más información.</p>';
-    });
+    const onSourceChange = function() {
+        if (this.getState() === 'ready') {
+            sourcesLoaded++;
+            if (sourcesLoaded === sourcesToWaitFor) {
+                let combinedExtent = ol.extent.createEmpty();
+                allSources.forEach(s => {
+                    if (s.getFeatures().length > 0) {
+                        ol.extent.extend(combinedExtent, s.getExtent());
+                    }
+                });
 
-    // A more comprehensive translation dictionary for property keys
-    // Keys are lowercase to ensure case-insensitive matching
-    const translationDict = {
-        'address': 'Ubicación',
-        'location': 'Ubicación', // Maps 'location' to the same translation
-        'type': 'Tipo',
-        'status': 'Estado',
-        'length': 'Longitud',
-        'owner': 'Propietario',
-        'url': 'Enlace',
-        'link': 'Enlace',
-        'reference': 'Referencia',
-        'reference_link': 'Enlace de Referencia',
-        'image': 'Imagen',
-        'photo': 'Foto',
-        'pue': 'PUE',
-        'wue': 'WUE',
-        'connections': 'Conexiones',
-        'operator': 'Operador',
-        'date_commissioned': 'Fecha de Puesta en Servicio',
-        'capacity': 'Capacidad',
-        'source': 'Fuente',
+                if (!ol.extent.isEmpty(combinedExtent)) {
+                    map.getView().fit(combinedExtent, {
+                        padding: [50, 50, 50, 50],
+                        duration: 1000,
+                        maxZoom: 10
+                    });
+                }
+                // Remove the event listeners after they have served their purpose
+                allSources.forEach(s => s.un('change', onSourceChange));
+            }
+        }
     };
-
-    /**
-     * Generates formatted HTML content for the info panel based on feature properties.
-     * @param {ol.Feature} feature The OpenLayers feature.
-     * @returns {string} HTML string for the info panel.
-     */
-    function getFormattedFeatureInfo(feature) {
-        const properties = feature.getProperties();
-        let htmlContent = '<div class="info-panel-content">';
-
-        // Use feature's name as the title
-        const name = properties.name || properties.id;
-        if (name) {
-            htmlContent += `<h2>${name}</h2>`;
-        }
-
-        // Add 'type' as a subtitle, translated if needed
-        if (properties.type) {
-            htmlContent += `<h4 class="subtitle">${properties.type}</h4>`;
+    allSources.forEach(source => source.on('change', onSourceChange));
+    
+    // New logic to close panels on click outside
+    document.addEventListener('click', function(event) {
+        // Close the layer controls panel if it's open and the click is outside
+        if (layerControls.classList.contains('open') && !layerControls.contains(event.target) && !toggleLayerControlsButton.contains(event.target)) {
+            layerControls.classList.remove('open');
+            toggleLayerControlsButton.classList.remove('hidden');
         }
         
-        // Define properties to exclude from the panel
-        const excludedKeys = ['shape', 'color', 'size', 'width', 'lineDash', 'type', 'id', 'name', 'geometry'];
-
-        // Loop through all properties and build the list
-        for (const key in properties) {
-            const lowercaseKey = key.toLowerCase();
-            if (properties.hasOwnProperty(key) && !excludedKeys.includes(lowercaseKey)) {
-                
-                // Get the translated key from the dictionary, or format it if not found
-                const translatedKey = translationDict[lowercaseKey] || key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-                let value = properties[key];
-
-                // Check for image links and format them as an <img> tag
-                if (lowercaseKey.includes('image') || lowercaseKey.includes('photo')) {
-                    if (typeof value === 'string') {
-                         htmlContent += `<div class="info-item image-container"><img src="${value}" alt="${translatedKey}" /></div>`;
-                         continue;
-                    }
-                }
-                // Check for general URLs and format them as an <a> tag
-                else if (lowercaseKey.includes('url') || lowercaseKey.includes('link') || lowercaseKey.includes('reference')) {
-                    if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'))) {
-                        const linkName = translationDict[lowercaseKey] || key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-                        htmlContent += `<div class="info-item link-container"><strong>${linkName}:</strong> <a href="${value}" target="_blank">Ver Enlace</a></div>`;
-                        continue;
-                    }
-                }
-                
-                // For all other properties, display as a simple key-value pair
-                htmlContent += `<div class="info-item"><strong>${translatedKey}:</strong> ${value}</div>`;
-            }
+        // Close the info panel if it's open and the click is outside
+        if (infoPanel.classList.contains('open') && !infoPanel.contains(event.target) && !map.getTargetElement().contains(event.target.closest('.ol-viewport'))) {
+            infoPanel.classList.remove('open');
+            selectedFeature = null;
         }
+    });
 
-        htmlContent += '</div>';
-        return htmlContent;
-    }
-
-    map.on('click', function(evt) {
-        // Hide tooltip on click
-        tooltipElement.style.display = 'none';
-
-        const feature = map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-            // Only return features from your specific layers (cables, points, data_centers, land_cables)
-            if (layer === cableLayer || layer === pointLayer || layer === dataCenterLayer || layer === landCableLayer) {
-                return feature;
-            }
-            return undefined;
-        }, {
-            hitTolerance: 5 // Adjust hit tolerance as needed
+    // Stop propagation for clicks inside the info panel so they don't close it
+    if (infoPanel) {
+        infoPanel.addEventListener('click', function(event) {
+            event.stopPropagation();
         });
-
-        // ===========================================
-        // START OF NEW LOGIC: Close layer panel on outside click
-        // ===========================================
-        const layerControlsPanel = document.getElementById('layer-controls');
-        const toggleLayerControlsButton = document.getElementById('toggle-layer-controls');
-
-        // Check if the click target is inside the layer controls panel or the button
-        const isClickInsideLayerPanel = layerControlsPanel.contains(evt.originalEvent.target);
-        const isClickInsideToggleButton = toggleLayerControlsButton.contains(evt.originalEvent.target);
-
-        // If the panel is open and the click was outside of it and the button, close the panel
-        if (layerControlsPanel.classList.contains('open') && !isClickInsideLayerPanel && !isClickInsideToggleButton) {
-            layerControlsPanel.classList.remove('open');
-            toggleLayerControlsButton.style.display = 'block'; // Show the button again
-            // Do not process other clicks (e.g., feature clicks) if the goal was to close the panel
-            return;
-        }
-        // ===========================================
-        // END OF NEW LOGIC
-        // ===========================================
-
-        const infoPanel = document.getElementById('info-panel');
-        const panelContent = document.getElementById('panel-content');
-
-
-        if (feature) {
-            // Use the new function to get formatted content
-            panelContent.innerHTML = getFormattedFeatureInfo(feature);
-            infoPanel.classList.add('open'); // Show the panel
-        } else {
-            infoPanel.classList.remove('open'); // Hide the panel if no feature clicked
-            panelContent.innerHTML = '<p>Haz click en un punto o cable para ver más información.</p>'; // Reset content
-        }
-    });
-
-
-}); // End DOMContentLoaded
-
-// === TOOLTIP LOGIC ===
-const tooltipElement = document.getElementById('tooltip');
-const tooltip = new ol.Overlay({
-    element: tooltipElement,
-    offset: [0, -15],
-    positioning: 'bottom-center'
-});
-map.addOverlay(tooltip);
-
-let hoveredFeature = null; // Track the currently hovered feature
-
-// This function is for the tooltip, which follows the cursor.
-map.on('pointermove', function(evt) {
-    if (evt.dragging) {
-        // If the user is dragging the map, hide the tooltip
-        tooltipElement.style.display = 'none';
-        hoveredFeature = null;
-        return;
     }
 
-    const pixel = map.getEventPixel(evt.originalEvent);
-    const feature = map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-        // Only return features from your specific layers
-        if (layer === cableLayer || layer === pointLayer || layer === dataCenterLayer || layer === landCableLayer) {
-            return feature;
-        }
-        return undefined;
-    }, {
-        hitTolerance: 5
-    });
-
-    // Set the tooltip position to the cursor's location
-    tooltip.setPosition(evt.coordinate);
-
-    if (feature) {
-        const properties = feature.getProperties();
-        const name = properties.name || properties.id; // Use name or id as tooltip content
-        const type = properties.type; // Get the type property
-        
-        if (name) {
-            let tooltipContent = `<strong>${name}</strong>`;
-            if (type) {
-                tooltipContent += `<br>${type}`;
-            }
-            tooltipElement.innerHTML = tooltipContent;
-            tooltipElement.style.display = 'block';
-        } else {
-            // If the feature has no name or id, hide the tooltip
-            tooltipElement.style.display = 'none';
-        }
-    } else {
-        // If no feature is under the cursor, hide the tooltip
-        tooltipElement.style.display = 'none';
+    // Stop propagation for clicks inside the layer controls panel so they don't close it
+    if (layerControls) {
+        layerControls.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
     }
-});
-
-
-// Optional: Change mouse cursor to a pointer when hovering over a feature
-map.on('pointermove', function(evt) {
-    const hit = map.hasFeatureAtPixel(evt.pixel, {
-        layerFilter: function(layer) {
-            // Check if the layer is one of our custom layers.
-            return layer === cableLayer || layer === pointLayer || layer === dataCenterLayer || layer === landCableLayer;
-        },
-        hitTolerance: 5
-    });
-    map.getTargetElement().style.cursor = hit ? 'pointer' : '';
-});
-
-// Optional: Fly to the extent of your features after they load
-// This logic waits for all data sources to load before zooming.
-let loadedSources = 0;
-const totalSources = 4; // We have four sources: cable, points, data_centers, land_cables
-
-const fitMapToAllFeatures = () => {
-    if (loadedSources === totalSources) {
-        const cableExtent = cableSource.getExtent();
-        const pointExtent = pointSource.getExtent();
-        const dataCenterExtent = dataCenterSource.getExtent();
-        const landCableExtent = landCableSource.getExtent();
-
-        // Combine all extents
-        const combinedExtent = ol.extent.createEmpty();
-        ol.extent.extend(combinedExtent, cableExtent);
-        ol.extent.extend(combinedExtent, pointExtent);
-        ol.extent.extend(combinedExtent, dataCenterExtent);
-        ol.extent.extend(combinedExtent, landCableExtent);
-
-
-        if (combinedExtent && combinedExtent[0] !== Infinity) { // Check if extent is valid
-            map.getView().fit(combinedExtent, {
-                padding: [50, 50, 50, 50], // Add padding around the features
-                duration: 1000 // Smooth animation
-            });
-        }
-    }
-};
-
-// Listen for 'addfeature' event on all sources
-cableSource.on('addfeature', function() {
-    loadedSources++;
-    fitMapToAllFeatures();
-});
-pointSource.on('addfeature', function() {
-    loadedSources++;
-    fitMapToAllFeatures();
-});
-dataCenterSource.on('addfeature', function() {
-    loadedSources++;
-    fitMapToAllFeatures();
-});
-landCableSource.on('addfeature', function() {
-    loadedSources++;
-    fitMapToAllFeatures();
 });
