@@ -28,6 +28,14 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    /* ADDED: These rules prevent selection and highlighting across the whole page,
+       which is a more robust way to prevent the blue overlay on the map. */
+    -webkit-user-select: none;  /* Safari */
+    -moz-user-select: none;     /* Firefox */
+    -ms-user-select: none;      /* Internet Explorer/Edge */
+    user-select: none;          /* Standard */
+    -webkit-tap-highlight-color: transparent; /* Disable the tap highlight */
+    -webkit-touch-callout: none; /* Disable the touch callout box */
 }
 
 /* Estilos para el encabezado principal */
@@ -48,10 +56,6 @@ h1 {
     height: 85vh;
     position: relative;
     overflow: hidden;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 /* Estilos del Tooltip de OpenLayers */
