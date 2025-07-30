@@ -338,6 +338,26 @@ map.on('click', function(evt) {
         const info = getFormattedFeatureInfo(selectedFeature);
         panelContent.innerHTML = info;
         infoPanel.classList.add('open');
+
+        const featureGeometry = selectedFeature.getGeometry();
+        if (featureGeometry) {
+            let currentMaxZoom = 16; // Default max zoom for larger features (cables)
+            const featureType = selectedFeature.get('type'); // Get the 'type' property from the feature
+
+            // Adjust maxZoom based on feature type
+            if (featureType && (featureType.toLowerCase() === 'point' || featureType.toLowerCase() === 'data center')) {
+                currentMaxZoom = 9; // Less zoom for points/data centers
+            } else if (featureType && (featureType.toLowerCase() === 'landing point')) {
+                currentMaxZoom = 9; // Less zoom for landing points
+            }
+
+            map.getView().fit(featureGeometry.getExtent(), {
+                duration: 700, // Smooth animation over 700 milliseconds
+                padding: [100, 100, 100, 100], // Padding around the feature (top, right, bottom, left)
+                maxZoom: currentMaxZoom // Apply the determined max zoom
+            });
+        }
+
     } else {
         // Only close the panel without changing content if no feature is clicked
         if (infoPanel.classList.contains('open')) {
@@ -370,7 +390,14 @@ map.on('pointermove', function(evt) {
     if (feature) {
         const properties = feature.getProperties();
         const name = properties['name'] || 'Elemento';
-        tooltipElement.innerHTML = name;
+        const type = properties['type']; // Get the type property
+
+        let tooltipContent = `<strong>${name}</strong>`;
+        if (type) {
+            tooltipContent += `<br>${type}`; // Add type on a new line if it exists
+        }
+
+        tooltipElement.innerHTML = tooltipContent; // Set the formatted content
         tooltip.setPosition(evt.coordinate);
         tooltipElement.style.display = 'block';
     } else {
