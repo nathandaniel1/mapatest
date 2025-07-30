@@ -5,7 +5,7 @@
 
 // Create a new map instance with an OpenStreetMap base layer
 const map = new ol.Map({
-    target: 'map', // The ID of the div element where the map will be rendered
+    target: 'map', // The ID of the div element where the map x will be rendered
     layers: [
         new ol.layer.Tile({
             source: new ol.source.OSM(), // OpenStreetMap as the base layer
@@ -18,6 +18,19 @@ const map = new ol.Map({
         zoom: 6
     })
 });
+
+// >>> START OF CHANGES FOR ROTATION <<<
+// Get the default interactions from the map
+const interactions = map.getInteractions().getArray();
+
+// Find the PinchRotate interaction and set it to inactive
+interactions.forEach(function(interaction) {
+    if (interaction instanceof ol.interaction.PinchRotate) {
+        interaction.setActive(false);
+    }
+});
+// >>> END OF CHANGES FOR ROTATION <<<
+
 
 // Create a vector source for your cable data
 const cableSource = new ol.source.Vector({
@@ -374,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const togglePoints = document.getElementById('toggle-points');
     const toggleDataCenters = document.getElementById('toggle-data-centers');
     const toggleLandCables = document.getElementById('toggle-land-cables');
-    
+
     const toggleLayerControlsButton = document.getElementById('toggle-layer-controls');
     const layerControls = document.querySelector('.layer-controls');
 
@@ -403,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleLandCables.addEventListener('change', function() {
         landCableLayer.setVisible(this.checked);
     });
-    
+
     // CORRECTED: Logic for toggling the layer panel and hiding the button
     if (toggleLayerControlsButton) {
         toggleLayerControlsButton.addEventListener('click', function() {
@@ -444,7 +457,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     allSources.forEach(source => source.on('change', onSourceChange));
-    
+
     // New logic to close panels on click outside
     document.addEventListener('click', function(event) {
         // Close the layer controls panel if it's open and the click is outside
@@ -452,7 +465,7 @@ document.addEventListener('DOMContentLoaded', function() {
             layerControls.classList.remove('open');
             toggleLayerControlsButton.style.display = 'block';
         }
-        
+
         // Close the info panel if it's open and the click is outside
         if (infoPanel.classList.contains('open') && !infoPanel.contains(event.target) && !map.getTargetElement().contains(event.target.closest('.ol-viewport'))) {
             infoPanel.classList.remove('open');
