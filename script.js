@@ -359,6 +359,30 @@ document.addEventListener('DOMContentLoaded', function() {
         panelContent.innerHTML = '<p>Haz click en un punto o cable para ver más información.</p>';
     });
 
+    // A more comprehensive translation dictionary for property keys
+    // Keys are lowercase to ensure case-insensitive matching
+    const translationDict = {
+        'address': 'Ubicación',
+        'location': 'Ubicación', // Maps 'location' to the same translation
+        'type': 'Tipo',
+        'status': 'Estado',
+        'length': 'Longitud',
+        'owner': 'Propietario',
+        'url': 'Enlace',
+        'link': 'Enlace',
+        'reference': 'Referencia',
+        'reference_link': 'Enlace de Referencia',
+        'image': 'Imagen',
+        'photo': 'Foto',
+        'pue': 'PUE',
+        'wue': 'WUE',
+        'connections': 'Conexiones',
+        'operator': 'Operador',
+        'date_commissioned': 'Fecha de Puesta en Servicio',
+        'capacity': 'Capacidad',
+        'source': 'Fuente',
+    };
+
     /**
      * Generates formatted HTML content for the info panel based on feature properties.
      * @param {ol.Feature} feature The OpenLayers feature.
@@ -366,104 +390,50 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function getFormattedFeatureInfo(feature) {
         const properties = feature.getProperties();
-        const type = properties.type; // Get the 'type' property (e.g., "Submarino", "Landing Station", "Data Center", "Cable Terrestre")
-        let htmlContent = '<div>'; // Use a div as a container for better styling flexibility
+        let htmlContent = '<div class="info-panel-content">';
 
-        // Common properties for all features
-        if (properties.name) {
-            htmlContent += `<p><strong>Nombre:</strong> ${properties.name}</p>`;
+        // Use feature's name as the title
+        const name = properties.name || properties.id;
+        if (name) {
+            htmlContent += `<h2>${name}</h2>`;
         }
+
+        // Add 'type' as a subtitle, translated if needed
         if (properties.type) {
-            htmlContent += `<p><strong>Tipo:</strong> ${properties.type}</p>`;
+            htmlContent += `<h4 class="subtitle">${properties.type}</h4>`;
         }
+        
+        // Define properties to exclude from the panel
+        const excludedKeys = ['shape', 'color', 'size', 'width', 'lineDash', 'type', 'id', 'name', 'geometry'];
 
-        // Specific properties based on feature type
-        switch (type) {
-            case 'Submarino':
-            case 'Cable Terrestre':
-                // Properties for Cables
-                if (properties.length_km) {
-                    htmlContent += `<p><strong>Longitud (km):</strong> ${properties.length_km.toLocaleString()}</p>`;
-                }
-                if (properties.operator) {
-                    htmlContent += `<p><strong>Operador:</strong> ${properties.operator}</p>`;
-                }
-                if (properties.route_description) {
-                    htmlContent += `<p><strong>Descripción de Ruta:</strong> ${properties.route_description}</p>`;
-                }
-                break;
+        // Loop through all properties and build the list
+        for (const key in properties) {
+            const lowercaseKey = key.toLowerCase();
+            if (properties.hasOwnProperty(key) && !excludedKeys.includes(lowercaseKey)) {
+                
+                // Get the translated key from the dictionary, or format it if not found
+                const translatedKey = translationDict[lowercaseKey] || key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                let value = properties[key];
 
-            case 'Landing Station':
-                // Properties for Landing Points (Puntos de Aterrizaje)
-                if (properties.address) {
-                    htmlContent += `<p><strong>Dirección:</strong> ${properties.address}</p>`;
-                }
-                if (properties.capacity) {
-                    htmlContent += `<p><strong>Capacidad:</strong> ${properties.capacity}</p>`;
-                }
-                if (properties.date_commissioned) {
-                    htmlContent += `<p><strong>Fecha de Puesta en Servicio:</strong> ${properties.date_commissioned}</p>`;
-                }
-                if (properties.operator) {
-                    htmlContent += `<p><strong>Operador:</strong> ${properties.operator}</p>`;
-                }
-                if (properties.connections) {
-                    htmlContent += `<p><strong>Conexiones:</strong> ${properties.connections}</p>`;
-                }
-                if (properties.source) {
-                    htmlContent += `<p><strong>Fuente de Información:</strong> ${properties.source}</p>`;
-                }
-                if (properties.reference_link) {
-                    htmlContent += `<p><strong>Más Información:</strong> <a href="${properties.reference_link}" target="_blank">Ver Documento</a></p>`;
-                }
-                break;
-
-            case 'Data Center':
-                // Properties for Data Centers
-                if (properties.address) {
-                    htmlContent += `<p><strong>Dirección:</strong> ${properties.address}</p>`;
-                }
-                if (properties.pue) {
-                    htmlContent += `<p><strong>Power Usage Effectiveness (PUE):</strong> ${properties.pue.toFixed(2)}</p>`;
-                }
-                if (properties.wue) {
-                    htmlContent += `<p><strong>Water Usage Effectiveness (WUE):</strong> ${properties.wue.toFixed(2)}</p>`;
-                }
-                if (properties.source) {
-                    htmlContent += `<p><strong>Fuente de Información:</strong> ${properties.source}</p>`;
-                }
-                if (properties.reference_link) {
-                    htmlContent += `<p><strong>Más Información:</strong> <a href="${properties.reference_link}" target="_blank">Ver Detalle</a></p>`;
-                }
-                break;
-
-            default:
-                // Fallback for any other feature type or if 'type' is missing
-                htmlContent += '<p>No hay información detallada disponible para este elemento.</p>';
-                // You can also loop through all properties here, excluding specific ones
-                for (const key in properties) {
-                    // Exclude internal OpenLayers properties and styling attributes
-                    if (properties.hasOwnProperty(key) &&
-                        key !== 'geometry' &&
-                        key !== 'color' &&
-                        key !== 'width' &&
-                        key !== 'shape' &&
-                        key !== 'size' &&
-                        key !== 'name' && // Already added above
-                        key !== 'type' && // Already added above
-                        key !== 'style' // If you have a 'style' property
-                    ) {
-                        let displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); // Convert 'some_key' to 'Some Key'
-                        let value = properties[key];
-
-                        // Special handling for links that might appear in other properties
-                        if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'))) {
-                            value = `<a href="${value}" target="_blank">${value}</a>`;
-                        }
-                        htmlContent += `<p><strong>${displayKey}:</strong> ${value}</p>`;
+                // Check for image links and format them as an <img> tag
+                if (lowercaseKey.includes('image') || lowercaseKey.includes('photo')) {
+                    if (typeof value === 'string') {
+                         htmlContent += `<div class="info-item image-container"><img src="${value}" alt="${translatedKey}" /></div>`;
+                         continue;
                     }
                 }
-                break;
+                // Check for general URLs and format them as an <a> tag
+                else if (lowercaseKey.includes('url') || lowercaseKey.includes('link') || lowercaseKey.includes('reference')) {
+                    if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'))) {
+                        const linkName = translationDict[lowercaseKey] || key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                        htmlContent += `<div class="info-item link-container"><strong>${linkName}:</strong> <a href="${value}" target="_blank">Ver Enlace</a></div>`;
+                        continue;
+                    }
+                }
+                
+                // For all other properties, display as a simple key-value pair
+                htmlContent += `<div class="info-item"><strong>${translatedKey}:</strong> ${value}</div>`;
+            }
         }
 
         htmlContent += '</div>';
@@ -499,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
             layerControlsPanel.classList.remove('open');
             toggleLayerControlsButton.style.display = 'block'; // Show the button again
             // Do not process other clicks (e.g., feature clicks) if the goal was to close the panel
-            return; 
+            return;
         }
         // ===========================================
         // END OF NEW LOGIC
@@ -533,80 +503,49 @@ map.addOverlay(tooltip);
 
 let hoveredFeature = null; // Track the currently hovered feature
 
-// Debounce function to limit how often a function is called
-const debounce = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-            func.apply(null, args);
-        }, delay);
-    };
-};
-
-// This function will be debounced to check for features and update tooltip content/visibility
-const updateTooltipContentAndVisibility = (pixel) => {
-    let featureFoundAtPixel = false;
-    map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-        // Check if the feature belongs to one of your custom layers
-        if (layer === cableLayer || layer === pointLayer || layer === dataCenterLayer || layer === landCableLayer) {
-            // Only update if it's a new feature or if we just started hovering
-            if (feature !== hoveredFeature) {
-                const properties = feature.getProperties();
-                let tooltipContent = '';
-                const name = properties['name'];
-                const type = properties['type'];
-
-                // REVERTED TOOLTIP FORMAT: Bold name on top, normal type below
-                if (name && type) {
-                    tooltipContent = `<strong>${name}</strong><br>${type}`;
-                } else if (name) {
-                    tooltipContent = `<strong>${name}</strong>`;
-                } else if (type) {
-                    tooltipContent = type;
-                }
-
-                if (tooltipContent) { // Only show if there's content to display
-                    tooltipElement.innerHTML = tooltipContent;
-                    tooltipElement.style.display = 'block';
-                    hoveredFeature = feature; // Set the hovered feature for potential future use
-                } else { // Feature found but no relevant info for tooltip
-                    tooltipElement.style.display = 'none';
-                    tooltipElement.innerHTML = '';
-                    hoveredFeature = null;
-                }
-            }
-            featureFoundAtPixel = true; // A relevant feature was found at this pixel
-            return true; // Stop iterating over features once one is found on our layer
-        }
-    }, {
-        hitTolerance: 5
-    }); // hitTolerance makes it easier to select features
-
-    // If no relevant feature was found at the pixel, hide the tooltip and clear the hovered feature
-    if (!featureFoundAtPixel) {
-        tooltipElement.style.display = 'none';
-        tooltipElement.innerHTML = ''; // Clear content
-        hoveredFeature = null;
-    }
-};
-
-// Create a debounced version of the feature checking function
-const debouncedUpdateTooltip = debounce(updateTooltipContentAndVisibility, 50); // 50ms debounce
-
-// Main pointermove event listener
-map.on('pointermove', function(event) {
-    if (event.dragging) {
+// This function is for the tooltip, which follows the cursor.
+map.on('pointermove', function(evt) {
+    if (evt.dragging) {
+        // If the user is dragging the map, hide the tooltip
         tooltipElement.style.display = 'none';
         hoveredFeature = null;
         return;
     }
 
-    // Always update tooltip position immediately
-    tooltip.setPosition(event.coordinate);
+    const pixel = map.getEventPixel(evt.originalEvent);
+    const feature = map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+        // Only return features from your specific layers
+        if (layer === cableLayer || layer === pointLayer || layer === dataCenterLayer || layer === landCableLayer) {
+            return feature;
+        }
+        return undefined;
+    }, {
+        hitTolerance: 5
+    });
 
-    // Call the debounced function to check for features and update content/visibility
-    debouncedUpdateTooltip(event.pixel);
+    // Set the tooltip position to the cursor's location
+    tooltip.setPosition(evt.coordinate);
+
+    if (feature) {
+        const properties = feature.getProperties();
+        const name = properties.name || properties.id; // Use name or id as tooltip content
+        const type = properties.type; // Get the type property
+        
+        if (name) {
+            let tooltipContent = `<strong>${name}</strong>`;
+            if (type) {
+                tooltipContent += `<br>${type}`;
+            }
+            tooltipElement.innerHTML = tooltipContent;
+            tooltipElement.style.display = 'block';
+        } else {
+            // If the feature has no name or id, hide the tooltip
+            tooltipElement.style.display = 'none';
+        }
+    } else {
+        // If no feature is under the cursor, hide the tooltip
+        tooltipElement.style.display = 'none';
+    }
 });
 
 
@@ -614,16 +553,13 @@ map.on('pointermove', function(event) {
 map.on('pointermove', function(evt) {
     const hit = map.hasFeatureAtPixel(evt.pixel, {
         layerFilter: function(layer) {
-            // Check if the layer is one of our custom layers (cableLayer or pointLayer, etc.).
+            // Check if the layer is one of our custom layers.
             return layer === cableLayer || layer === pointLayer || layer === dataCenterLayer || layer === landCableLayer;
         },
         hitTolerance: 5
     });
     map.getTargetElement().style.cursor = hit ? 'pointer' : '';
 });
-
-// === END OF TOOLTIP AND CURSOR LOGIC ===
-
 
 // Optional: Fly to the extent of your features after they load
 // This logic waits for all data sources to load before zooming.
