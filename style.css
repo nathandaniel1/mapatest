@@ -256,11 +256,6 @@ h1 {
         z-index: 1000;
         transition: all 0.3s ease;
     }
-
-    /* NEW CLASS: This class will be toggled by the JavaScript to hide the button */
-    #toggle-layer-controls.hidden {
-        display: none !important;
-    }
     
     .layer-controls {
         top: auto;
