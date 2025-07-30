@@ -13,12 +13,22 @@
         "address": "Camino La Viñita, Liray s/n, Colina, Región Metropolitana",
         "pue": 1.45,
         "wue": 1.2,
+        "dimensiones": "1200 m² (construidos)",
+        "tecnologias": "N/A",
+        "sistemas_refrigeracion": "Aire, In-row, Evaporativa",
+        "consumo_agua": "N/A",
+        "uso_suelo": "N/A",
+        "emisiones": "N/A",
         "source": "Ejemplo S.A.",
-        "reference_link": "http://ejemplo.com/dc-santiago.pdf"
+        "reference_link": "http://ejemplo.com/dc-santiago.pdf",
+        "image": "https://placehold.co/600x400"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-70.737224, -33.24317]
+        "coordinates": [
+          -70.737224,
+          -33.24317
+        ]
       }
     },
     {
@@ -33,12 +43,22 @@
         "address": "El Molino 2130, Quilicura, Región Metropolitana, Chile",
         "pue": 1.55,
         "wue": 1.1,
+        "dimensiones": "N/A",
+        "tecnologias": "N/A",
+        "sistemas_refrigeracion": "N/A",
+        "consumo_agua": "N/A",
+        "uso_suelo": "N/A",
+        "emisiones": "N/A",
         "source": "Innovación Chile",
-        "reference_link": "http://innovacionchile.com/dc-concepcion.pdf"
+        "reference_link": "http://innovacionchile.com/dc-concepcion.pdf",
+        "image": "https://placehold.co/600x400"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-70.69723, -33.35861]
+        "coordinates": [
+          -70.69723,
+          -33.35861
+        ]
       }
     },
     {
@@ -52,12 +72,22 @@
         "address": "Carretera General San Martín, Calle Larga, Chile",
         "pue": 1.55,
         "wue": 1.1,
+        "dimensiones": "N/A",
+        "tecnologias": "N/A",
+        "sistemas_refrigeracion": "N/A",
+        "consumo_agua": "N/A",
+        "uso_suelo": "N/A",
+        "emisiones": "N/A",
         "source": "https://www.datacenters.com/edgeconnex-scl02-santiago",
-        "reference_link": "http://innovacionchile.com/dc-concepcion.pdf"
+        "reference_link": "http://innovacionchile.com/dc-concepcion.pdf",
+        "image": "https://placehold.co/600x400"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-70.70246, -33.29724]
+        "coordinates": [
+          -70.70246,
+          -33.29724
+        ]
       }
     },
     {
@@ -71,12 +101,22 @@
         "address": "Bernardo O'Higgins 485, Temuco, Chile",
         "pue": 1.55,
         "wue": 1.1,
+        "dimensiones": "N/A",
+        "tecnologias": "N/A",
+        "sistemas_refrigeracion": "N/A",
+        "consumo_agua": "N/A",
+        "uso_suelo": "N/A",
+        "emisiones": "N/A",
         "source": "https://www.datacenters.com/anacondaweb-temuco-downtown",
-        "reference_link": "https://maps.app.goo.gl/r9PzWZyaTqKQHrnP7"
+        "reference_link": "https://maps.app.goo.gl/r9PzWZyaTqKQHrnP7",
+        "image": "https://placehold.co/600x400"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-72.596109, -38.742707]
+        "coordinates": [
+          -72.596109,
+          -38.742707
+        ]
       }
     },
     {
@@ -90,14 +130,23 @@
         "address": "Av. Tupungato 3371, Valparaíso, Chile",
         "pue": 1.55,
         "wue": 1.1,
+        "dimensiones": "N/A",
+        "tecnologias": "N/A",
+        "sistemas_refrigeracion": "N/A",
+        "consumo_agua": "N/A",
+        "uso_suelo": "N/A",
+        "emisiones": "N/A",
         "source": "https://www.datacenters.com/anacondaweb-temuco-downtown",
-        "reference_link": "https://maps.app.goo.gl/r9PzWZyaTqKQHrnP7"
+        "reference_link": "https://maps.app.goo.gl/r9PzWZyaTqKQHrnP7",
+        "image": "https://placehold.co/600x400"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-71.559701, -33.135938]
+        "coordinates": [
+          -71.559701,
+          -33.135938
+        ]
       }
     }
-    
   ]
 }
