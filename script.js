@@ -152,64 +152,59 @@ const dataCenterSource = new ol.source.Vector({
 const dataCenterLayer = new ol.layer.Vector({
     source: dataCenterSource,
     style: function(feature) {
-        const shape = feature.get('shape');
+        const geometryType = feature.getGeometry().getType();
+        const zoom = map.getView().getZoom(); // Get current zoom level
         const color = feature.get('color');
         const size = feature.get('size');
-        const opacity = feature.get('opacity');
+        const shape = feature.get('shape');
 
         let fillColor = color || '#5DADE2'; // Default color for data centers
         let strokeColor = '#333';
         let pointSize = size || 8; // Default size for data centers
 
-        let dataCenterStyle;
+        const styles = [];
 
-        // Apply shapes for data centers based on GeoJSON 'shape' property (similar to points)
+        // Always add a point style for Data Centers, regardless of original geometry type
+        // For Polygons, we'll get the centroid to place the point icon
+        let pointGeometry = feature.getGeometry();
+        if (geometryType === 'Polygon' || geometryType === 'MultiPolygon') {
+            // Get the interior point of the polygon for the marker
+            pointGeometry = ol.geom.Polygon.prototype.getInteriorPoint.call(feature.getGeometry());
+        }
+
+        let pointImage;
         if (shape && shape.toLowerCase() === 'circle') {
-            dataCenterStyle = new ol.style.Style({
-                image: new ol.style.Circle({
-                    radius: pointSize,
-                    fill: new ol.style.Fill({
-                        color: fillColor
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: strokeColor,
-                        width: 1
-                    })
-                })
+            pointImage = new ol.style.Circle({
+                radius: pointSize,
+                fill: new ol.style.Fill({ color: fillColor }),
+                stroke: new ol.style.Stroke({ color: strokeColor, width: 1 })
             });
-        } else if (shape && shape.toLowerCase() === 'square') {
-            dataCenterStyle = new ol.style.Style({
-                image: new ol.style.RegularShape({
-                    points: 4,
-                    radius: pointSize,
-                    angle: Math.PI / 4, // Rotar para que parezca un cuadrado
-                    fill: new ol.style.Fill({
-                        color: fillColor
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: strokeColor,
-                        width: 1
-                    })
-                })
-            });
-        } else {
-            // Default to a square if shape is not specified or recognized
-            dataCenterStyle = new ol.style.Style({
-                image: new ol.style.RegularShape({
-                    points: 4,
-                    radius: pointSize,
-                    angle: Math.PI / 4,
-                    fill: new ol.style.Fill({
-                        color: fillColor
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: strokeColor,
-                        width: 1
-                    })
-                })
+        } else { // Default to square for data centers
+            pointImage = new ol.style.RegularShape({
+                points: 4,
+                radius: pointSize,
+                angle: Math.PI / 4, // Rotate for square
+                fill: new ol.style.Fill({ color: fillColor }),
+                stroke: new ol.style.Stroke({ color: strokeColor, width: 1 })
             });
         }
-        return dataCenterStyle;
+        styles.push(new ol.style.Style({
+            image: pointImage,
+            geometry: pointGeometry // Apply point style at the feature's actual point or polygon's centroid
+        }));
+
+        // Add Polygon/MultiPolygon style only if the feature has a polygon geometry AND zoom is sufficient
+        if ((geometryType === 'Polygon' || geometryType === 'MultiPolygon') && zoom >= 13) { // Adjust 13 as needed
+            styles.push(new ol.style.Style({
+                // No fill property for transparent interior
+                stroke: new ol.style.Stroke({
+                    color: '#2BAB64', // Green color
+                    width: 2,
+                    lineDash: [10, 10] // Dashed line (10 pixels on, 10 pixels off)
+                })
+            }));
+        }
+        return styles;
     }
 });
 
@@ -346,9 +341,9 @@ map.on('click', function(evt) {
 
             // Adjust maxZoom based on feature type
             if (featureType && (featureType.toLowerCase() === 'point' || featureType.toLowerCase() === 'data center')) {
-                currentMaxZoom = 9; // Less zoom for points/data centers
+                currentMaxZoom = 13; // Less zoom for points/data centers
             } else if (featureType && (featureType.toLowerCase() === 'landing point')) {
-                currentMaxZoom = 9; // Less zoom for landing points
+                currentMaxZoom = 13; // Less zoom for landing points
             }
 
             map.getView().fit(featureGeometry.getExtent(), {
