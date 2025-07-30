@@ -22,20 +22,25 @@
 }
 
 /* Estilos generales del cuerpo y fuente */
-body {
+html, body {
     margin: 0;
     font-family: 'SourceCodeVariable', monospace;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    /* ADDED: These rules prevent selection and highlighting across the whole page,
-       which is a more robust way to prevent the blue overlay on the map. */
-    -webkit-user-select: none;  /* Safari */
+    /* CORRECCIÓN: Aplicar estas reglas al html y body para una cobertura máxima */
+    -webkit-user-select: none;  /* Safari, Chrome */
     -moz-user-select: none;     /* Firefox */
     -ms-user-select: none;      /* Internet Explorer/Edge */
     user-select: none;          /* Standard */
-    -webkit-tap-highlight-color: transparent; /* Disable the tap highlight */
-    -webkit-touch-callout: none; /* Disable the touch callout box */
+    -webkit-tap-highlight-color: transparent; /* Deshabilitar el highlight de tap */
+    -webkit-touch-callout: none; /* Deshabilitar el cuadro de llamada en iOS */
+}
+
+/* CORRECCIÓN: Eliminar el outline/shadow que puede aparecer al hacer clic/tocar */
+*:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 /* Estilos para el encabezado principal */
