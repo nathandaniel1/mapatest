@@ -316,6 +316,8 @@ closePanelBtn.addEventListener('click', () => {
 map.on('click', function(evt) {
     const feature = map.forEachFeatureAtPixel(evt.pixel, function(feature) {
         return feature;
+    }, {
+        hitTolerance: 5 // ADDED: Increase hit tolerance for better mobile touch response
     });
 
     if (feature) {
@@ -408,7 +410,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (layerControls) {
                 const isPanelOpen = layerControls.classList.toggle('open');
                 // Hide the button when the panel is open, show it when closed
-                toggleLayerControlsButton.classList.toggle('hidden', isPanelOpen);
+                toggleLayerControlsButton.style.display = isPanelOpen ? 'none' : 'block';
             }
         });
     }
@@ -448,7 +450,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Close the layer controls panel if it's open and the click is outside
         if (layerControls.classList.contains('open') && !layerControls.contains(event.target) && !toggleLayerControlsButton.contains(event.target)) {
             layerControls.classList.remove('open');
-            toggleLayerControlsButton.classList.remove('hidden');
+            toggleLayerControlsButton.style.display = 'block';
         }
         
         // Close the info panel if it's open and the click is outside
