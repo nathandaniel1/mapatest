@@ -34,20 +34,20 @@ body {
 h1 {
     font-family: 'NHaasGroteskDSPro', sans-serif;
     text-align: center;
-    padding: 10px 0; /* Reduced padding for a smaller height */
-    background-color: #1E1F1C; /* A new, darker color for a more professional look */
+    padding: 10px 0;
+    background-color: #1E1F1C;
     flex-shrink: 0;
-    font-size: 1.5em; /* Reduced font size */
+    font-size: 1.5em;
     letter-spacing: 2px;
-    color: #fff; /* Added a white text color for contrast */
+    color: #fff;
 }
 
 /* Estilos para el contenedor del mapa */
 #map {
     width: 100%;
-    height: 85vh; /* Ajusta el tamaño del mapa */
-    position: relative; /* Convierte a #map en el contexto de posicionamiento para elementos absolutos */
-    overflow: hidden; /* Asegura que el contenido fuera del mapa se recorte */
+    height: 85vh;
+    position: relative;
+    overflow: hidden;
 }
 
 /* Estilos del Tooltip de OpenLayers */
@@ -58,15 +58,15 @@ h1 {
     padding: 8px 12px;
     border-radius: 4px;
     white-space: nowrap;
-    z-index: 10; /* Asegura que aparezca sobre el mapa */
-    display: none; /* Oculta los tooltips por defecto */
-    pointer-events: none; /* Importante: permite que los eventos del mouse pasen al mapa */
-    transform: translate(-50%, -100%); /* Ajusta el puntero */
-    margin-top: -10px; /* Pequeño desplazamiento del puntero */
+    z-index: 10;
+    display: none;
+    pointer-events: none;
+    transform: translate(-50%, -100%);
+    margin-top: -10px;
     font-family: 'NHaasGroteskDSPro', sans-serif;
 }
 
-/* Estilos del Panel de Información - AHORA UN PANEL LATERAL DERECHO */
+/* Estilos del Panel de Información (Desktop) */
 .info-panel {
     position: fixed;
     top: 0;
@@ -79,32 +79,43 @@ h1 {
     color: #000000;
     padding: 20px;
     box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
-    z-index: 1000; /* Asegura que esté encima de todo */
-    transform: translateX(100%); /* Comienza fuera de la pantalla a la derecha */
-    transition: transform 0.3s ease-out; /* Añade una animación de deslizamiento suave */
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-out;
+    font-family: 'NHaasGroteskDSPro', sans-serif;
+    box-sizing: border-box;
 }
 
 /* Esta clase se añade con script.js para mostrar el panel */
 .info-panel.open {
-    transform: translateX(0); /* Desliza hacia la vista */
+    transform: translateX(0);
 }
 
 .info-panel h2 {
-    margin-top: 0;
-    color: #2BAB64; /* Verde para el título */
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2); /* Borde sutil */
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-    font-family: 'NHaasGroteskDSPro', sans-serif;
-}
-
-.info-panel p {
+    font-size: 1.5rem;
+    color: #2BAB64;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
     margin-bottom: 10px;
-    line-height: 1.5;
 }
 
-.info-panel p strong {
-    color: #a0a0a0; /* Gris ligeramente más claro para los nombres de las propiedades */
+.info-panel h4.subtitle {
+    font-size: 1rem;
+    font-weight: normal;
+    color: #555;
+    margin-top: -5px;
+    margin-bottom: 15px;
+}
+
+.info-item {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 10px;
+}
+
+.info-item strong {
+    font-weight: 600;
+    margin-right: 5px;
 }
 
 .info-panel .close-panel {
@@ -120,18 +131,18 @@ h1 {
     padding: 0;
 }
 .info-item.image-container {
-    text-align: center; /* Center the image in its container */
-    padding: 10px 0; /* Add some vertical space */
+    text-align: center;
+    padding: 10px 0;
 }
 
 .info-item.image-container img {
-    max-width: 100%; /* This is the key: it forces the image to not exceed the width of its parent container */
-    height: auto; /* This maintains the image's aspect ratio, so it doesn't get distorted */
-    border-radius: 8px; /* Optional: adds rounded corners to the image */
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
 }
 
 .close-panel:hover {
-    color: #2BAB64; /* Verde al pasar el mouse */
+    color: #2BAB64;
 }
 
 /* Escala de grises para la capa base de OpenStreetMap SOLAMENTE */
@@ -141,39 +152,39 @@ h1 {
 
 /* Estilos para el banner de investigación */
 #research-banner {
-    background-color: #1E1F1C; /* Gris-azul oscuro */
-    color: #fff;            /* Color de texto blanco */
-    padding: 15px 0;        /* Relleno vertical */
-    text-align: center;     /* Centra el texto */
-    font-size: 0.9em;       /* Texto ligeramente más pequeño */
-    position: relative;     /* Necesario para z-index si hay superposición */
-    z-index: 100;           /* Asegura que se mantenga encima del mapa */
-    width: 100%;            /* Ocupa todo el ancho */
-    flex-shrink: 0;         /* Evita que el banner se encoja */
+    background-color: #1E1F1C;
+    color: #fff;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 0.9em;
+    position: relative;
+    z-index: 100;
+    width: 100%;
+    flex-shrink: 0;
 }
 
 .banner-content {
-    max-width: 960px; /* Limita el ancho del contenido para una mejor legibilidad */
-    margin: 0 auto;   /* Centra el contenido horizontalmente */
-    padding: 0 20px;  /* Relleno horizontal para el contenido */
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 .banner-links a {
-    color: #87CEEB; /* Azul claro para los enlaces */
-    text-decoration: none; /* Sin subrayado por defecto */
-    margin: 0 10px; /* Espacio entre enlaces */
+    color: #87CEEB;
+    text-decoration: none;
+    margin: 0 10px;
 }
 
 .banner-links a:hover {
-    text-decoration: underline; /* Subrayado al pasar el mouse */
+    text-decoration: underline;
 }
 
 .banner-logo {
-    margin-top: 10px; /* Espacio encima del logo */
-    display: flex;    /* Usa flexbox para alinear el logo y el texto */
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center;     /* Centra verticalmente */
-    gap: 10px;        /* Espacio entre el logo y el texto */
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
 /* --- Panel de Control de Capas (Escritorio) --- */
@@ -181,8 +192,8 @@ h1 {
     position: absolute;
     top: auto;
     right: auto;
-    bottom: 10px; /* Posicionado en la parte inferior */
-    left: 10px; /* Posicionado a la izquierda */
+    bottom: 10px;
+    left: 10px;
     width: 250px;
     background-color: rgba(0, 0, 0, 0.607);
     color: white;
@@ -202,33 +213,35 @@ h1 {
 @media (max-width: 768px) {
     /* Panel de Información en Móvil */
     .info-panel {
-        top: auto; /* Elimina la alineación superior */
+        top: auto;
         right: 0;
         bottom: 0;
-        left: 0; /* Ocupa todo el ancho */
-        width: 100%; /* Asegura el ancho completo en móvil */
-        max-height: 50vh; /* Limita la altura a la mitad de la pantalla */
-        transform: translateY(100%); /* Comienza fuera de la pantalla en la parte inferior */
+        left: 0;
+        width: 100%;
+        max-width: 100%; /* Explicitly override max-width from desktop styles */
+        transform: translateY(100%);
         box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out;
+        font-family: 'NHaasGroteskDSPro', sans-serif;
     }
     
     .info-panel.open {
-        transform: translateY(0); /* Se desliza hacia arriba */
+        transform: translateY(0);
     }
     
     /* Controles de Capa en Móvil */
     .toggle-layer-controls-button {
-       display: block; /* Hace visible el botón en móvil */
+       display: block;
         position: absolute;
         bottom: 20px;
-        left: 20px; /* Posicionado a la izquierda */
-        right: auto; /* Elimina el posicionamiento derecho */
+        left: 20px;
+        right: auto;
         width: 50px;
         height: 50px;
         background-color: #8E6814;
         color: white;
         border: none;
-        border-radius: 8px; /* Cambia a un radio pequeño para un cuadrado con esquinas redondeadas */
+        border-radius: 8px;
         font-size: 2em;
         line-height: 1;
         cursor: pointer;
@@ -243,22 +256,14 @@ h1 {
         bottom: 0;
         left: 0;
         width: 100%;
-        max-height: 50vh; /* Limita la altura a la mitad de la pantalla */
-        border-radius: 8px 8px 0 0; /* Esquinas superiores redondeadas */
-        transform: translateY(100%); /* Comienza fuera de la pantalla en la parte inferior */
+        max-height: 50vh;
+        border-radius: 8px 8px 0 0;
+        transform: translateY(100%);
         box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
-        transition: transform 0.3s ease-in-out; /* Añade animación */
+        transition: transform 0.3s ease-in-out;
     }
     
     .layer-controls.open {
-        transform: translateY(0); /* Se desliza hacia arriba */
+        transform: translateY(0);
     }
-}
-#info-panel h4.subtitle {
-    color: #888; /* A nice dark grey color */
-    font-family: "NHaasGroteskDSPro", sans-serif;
-    font-size: 1em; /* You can adjust this size as needed */
-    font-weight: normal; /* To make it not bold */
-    margin-top: -10px; /* Adjust spacing between title and subtitle */
-    margin-bottom: 10px;
 }
