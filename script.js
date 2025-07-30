@@ -1,8 +1,5 @@
 // script.js
 
-// No 'import' statements needed here because ol.js from CDN
-// makes everything available under the global 'ol' object.
-
 // Create a new map instance with an OpenStreetMap base layer
 const map = new ol.Map({
     target: 'map', // The ID of the div element where the map x will be rendered
@@ -346,9 +343,24 @@ map.on('click', function(evt) {
                 currentMaxZoom = 13; // Less zoom for landing points
             }
 
+            // Determine padding based on screen size (for responsive info panel)
+            let fitPadding = [100, 100, 100, 100]; // Default padding
+            const mobileBreakpoint = 768; // Adjust this if your CSS breakpoint is different
+
+            if (window.innerWidth <= mobileBreakpoint) {
+                // On mobile, panel is at the bottom, so increase bottom padding
+                // Increased bottom padding from 300 to 450
+                fitPadding = [100, 100, 450, 100]; // <<<<---- CHANGED THIS LINE
+            } else {
+                // On desktop, panel is on the right, so increase right padding
+                // Assuming the panel is roughly 300px wide on desktop
+                fitPadding = [100, 350, 100, 100];
+            }
+
+
             map.getView().fit(featureGeometry.getExtent(), {
                 duration: 700, // Smooth animation over 700 milliseconds
-                padding: [100, 100, 100, 100], // Padding around the feature (top, right, bottom, left)
+                padding: fitPadding, // Use the dynamically determined padding
                 maxZoom: currentMaxZoom // Apply the determined max zoom
             });
         }
