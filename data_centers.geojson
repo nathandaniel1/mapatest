@@ -1,0 +1,103 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Claro-Chile, Data Center Colina",
+        "type": "Data Center",
+        "Empresa": "CLARO CHILE S.A.",
+        "shape": "square",
+        "color": "#2BAB64",
+        "size": 6,
+        "address": "Camino La Viñita, Liray s/n, Colina, Región Metropolitana",
+        "pue": 1.45,
+        "wue": 1.2,
+        "source": "Ejemplo S.A.",
+        "reference_link": "http://ejemplo.com/dc-santiago.pdf"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.737224, -33.24317]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Quilicura Google",
+        "type": "Data Center",
+        "Empresa": "Google",
+        "shape": "square",
+        "color": "#2BAB64",
+        "size": 6,
+        "address": "El Molino 2130, Quilicura, Región Metropolitana, Chile",
+        "pue": 1.55,
+        "wue": 1.1,
+        "source": "Innovación Chile",
+        "reference_link": "http://innovacionchile.com/dc-concepcion.pdf"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.69723, -33.35861]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "EdgeConnex: SCL02 Santiago Data Center",
+        "type": "Data Center",
+        "shape": "square",
+        "color": "#2BAB64",
+        "size": 6,
+        "address": "Carretera General San Martín, Calle Larga, Chile",
+        "pue": 1.55,
+        "wue": 1.1,
+        "source": "https://www.datacenters.com/edgeconnex-scl02-santiago",
+        "reference_link": "http://innovacionchile.com/dc-concepcion.pdf"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.70246, -33.29724]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Anacondaweb: Temuco Downtown Data Centern",
+        "type": "Data Center",
+        "shape": "square",
+        "color": "#2BAB64",
+        "size": 6,
+        "address": "Bernardo O'Higgins 485, Temuco, Chile",
+        "pue": 1.55,
+        "wue": 1.1,
+        "source": "https://www.datacenters.com/anacondaweb-temuco-downtown",
+        "reference_link": "https://maps.app.goo.gl/r9PzWZyaTqKQHrnP7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-72.596109, -38.742707]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Scala Data Centers: SSCLCR01",
+        "type": "Data Center",
+        "shape": "square",
+        "color": "#2BAB64",
+        "size": 6,
+        "address": "Av. Tupungato 3371, Valparaíso, Chile",
+        "pue": 1.55,
+        "wue": 1.1,
+        "source": "https://www.datacenters.com/anacondaweb-temuco-downtown",
+        "reference_link": "https://maps.app.goo.gl/r9PzWZyaTqKQHrnP7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.559701, -33.135938]
+      }
+    }
+    
+  ]
+}
