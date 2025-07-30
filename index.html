@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas de la Nubes</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1><i>ATLAS DE LA NUBE</i></h1>
+
+    <div id="map" class="map">
+        <button id="toggle-layer-controls" class="toggle-layer-controls-button">
+            <span class="icon">&#x2630;</span> </button>
+
+        <div id="layer-controls" class="layer-controls">
+            <h3>Capas</h3>
+            <div>
+                <input type="checkbox" id="toggle-cables" checked>
+                <label for="toggle-cables">Cables Submarinos</label>
+            </div>
+            <div>
+                <input type="checkbox" id="toggle-points" checked>
+                <label for="toggle-points">Puntos de Aterrizaje</label>
+            </div>
+            <div>
+                <input type="checkbox" id="toggle-data-centers" checked>
+                <label for="toggle-data-centers">Centros de Datos</label>
+            </div>
+            <div>
+                <input type="checkbox" id="toggle-land-cables" checked>
+                <label for="toggle-land-cables">Cables Terrestres</label>
+            </div>
+        </div>
+    </div>
+
+    <div id="research-banner">
+        <div class="banner-content">
+            <p><strong>Archivo web interactivo abierto</strong></p>
+            <p>Primera plataforma en Chile que reúne y pone a disposición pública información detallada y referenciada sobre centros de datos a nivel nacional. Este archivo digital sentará un precedente al incluir variables técnicas clave como ubicación georreferenciada, dimensiones físicas, tecnologías empleadas, sistemas de refrigeración, eficiencia energética (PUE) e hídrica (WUE), consumo de agua, uso de suelo y datos sobre emisiones. El archivo se implementará como un sitio web responsivo y navegable permitiendo la exploración de un mapa interactivo, la descarga de fichas técnicas individuales y la visualización de gráficos comparativos. Toda la información estará acompañada de sus respectivas fuentes y referencias, con opciones de descarga en formatos abiertos (CSV, GeoJSON, PDF)</p>
+            <div class="banner-links">
+                <a href="#" target="_blank">Enlace 1</a> |
+                <a href="#" target="_blank">Enlace 2</a>
+            </div>
+            <div class="banner-logo">
+                <img src="path/to/your/logo.png" alt="Logo" style="height: 50px;">
+                <p>...</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="tooltip" class="ol-tooltip"></div>
+
+    <div id="info-panel" class="info-panel">
+        <button id="close-panel" class="close-panel">&times;</button>
+        <h2>Información del Elemento</h2>
+        <div id="panel-content">
+            <p>Haz click en un punto o cable para ver más información.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/ol@v8.2.0/dist/ol.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+@font-face {
+    font-family: 'NHaasGroteskDSPro'; /* Use this name in your CSS */
+    src: url('fonts/NHaasGroteskDSPro-65Md.woff2') format('woff2'),
+         url('fonts/NHaasGroteskDSPro-65Md.woff') format('woff'),
+         url('fonts/NHaasGroteskDSPro-65Md.ttf') format('truetype'), /* Add .ttf or .otf if you have it */
+         url('fonts/NHaasGroteskDSPro-65Md.otf') format('opentype'); /* Add .otf if you have it */
+    font-weight: 500; /* Assuming "65Md" means a medium weight, typically around 500 */
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Define your second custom font: SourceCodeVariable-Roman */
+@font-face {
+    font-family: 'SourceCodeVariable'; /* Use this name in your CSS */
+    src: url('fonts/SourceCodeVariable-Roman.woff2') format('woff2'),
+         url('fonts/SourceCodeVariable-Roman.woff') format('woff'),
+         url('fonts/SourceCodeVariable-Roman.ttf') format('truetype'), /* Add .ttf or .otf if you have it */
+         url('fonts/SourceCodeVariable-Roman.otf') format('opentype'); /* Add .otf if you have it */
+    font-weight: normal; /* "Roman" usually implies regular weight */
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    margin: 0;
+    font-family: 'SourceCodeVariable', monospace;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1 {
+    font-family: 'NHaasGroteskDSPro', sans-serif;
+    text-align: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+    flex-shrink: 0;
+    font-size: 2em;
+    letter-spacing: 2px;
+}
+
+#map {
+    width: 100%;
+    height: 85vh; /* Adjusts map size */
+    position: relative; /* Makes #map the positioning context for absolute children */
+    overflow: hidden; /* Ensures any content outside the map is clipped */
+}
+
+/* Tooltip Styling */
+.ol-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 10; /* Ensures it appears above the map */
+    display: none; /* Hides tooltips by default */
+    pointer-events: none; /* Important: Allows mouse events to pass through to the map */
+    transform: translate(-50%, -100%); /* Adjusts pointer */
+    margin-top: -10px; /* Small offset from the pointer */
+    font-family: 'NHaasGroteskDSPro', sans-serif;
+}
+
+/* Info Panel Styling - NOW A SIDE PANEL ON THE RIGHT */
+.info-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 350px;
+    max-width: 90%;
+    overflow-y: auto;
+    background-color: rgb(255, 255, 255);
+    color: #000000;
+    padding: 20px;
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Ensure it's on top of everything */
+    transform: translateX(100%); /* Start off-screen to the right */
+    transition: transform 0.3s ease-out; /* Add a smooth slide-in/out animation */
+}
+
+/* This class is added by script.js to show the panel */
+.info-panel.open {
+    transform: translateX(0); /* Slide into view */
+}
+
+.info-panel h2 {
+    margin-top: 0;
+    color: #2BAB64; /* Light blue for title */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Subtle white border */
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-family: 'NHaasGroteskDSPro', sans-serif;
+}
+
+.info-panel p {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.info-panel p strong {
+    color: #a0a0a0; /* Slightly lighter gray for property names */
+}
+
+.info-panel .close-panel {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #000000;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+}
+
+.close-panel:hover {
+    color: #2BAB64; /* green on hover */
+}
+
+/* Grayscale for OpenStreetMap Base Layer ONLY */
+.ol-layer-osm-grayscale canvas {
+    filter: grayscale(100%);
+}
+
+/* Research Banner Styling */
+#research-banner {
+    background-color: #1E1F1C; /* Dark blue-gray */
+    color: #fff;            /* White text color */
+    padding: 15px 0;        /* Vertical padding, no horizontal padding */
+    text-align: center;     /* Center align text within the banner */
+    font-size: 0.9em;       /* Slightly smaller text */
+    position: relative;     /* Needed for z-index if overlapping */
+    z-index: 100;           /* Ensure it stays on top of the map if map extends */
+    width: 100%;            /* Make it span the full width */
+    flex-shrink: 0;         /* Prevent banner from shrinking */
+}
+
+.banner-content {
+    max-width: 960px; /* Limit content width for readability */
+    margin: 0 auto;   /* Center the content horizontally */
+    padding: 0 20px;  /* Horizontal padding for content */
+}
+
+.banner-links a {
+    color: #87CEEB; /* Light blue for links */
+    text-decoration: none; /* No underline by default */
+    margin: 0 10px; /* Space between links */
+}
+
+.banner-links a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+.banner-logo {
+    margin-top: 10px; /* Space above logo */
+    display: flex;    /* Use flexbox for logo and text alignment */
+    justify-content: center; /* Center horizontally */
+    align-items: center;     /* Center vertically */
+    gap: 10px;        /* Space between logo and text */
+}
+
+/* --- Layer Controls Panel (Desktop) --- */
+.layer-controls {
+    position: absolute;
+    top: auto; /* Corrected: Remove top positioning */
+    right: auto; /* Corrected: Remove right positioning */
+    bottom: 10px; /* Corrected: Position at the bottom */
+    left: 10px; /* Corrected: Position at the left */
+    width: 250px;
+    background-color: rgba(0, 0, 0, 0.607);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 900;
+}
+
+/* Initially hide the mobile toggle button on desktop */
+.toggle-layer-controls-button {
+    display: none;
+}
+
+/* --- Media Queries for Mobile --- */
+@media (max-width: 768px) {
+    /* Info Panel on Mobile */
+    .info-panel {
+        top: auto; /* Remove top alignment */
+        right: 0;
+        bottom: 0;
+        left: 0; /* Make it full width */
+        width: 100%; /* Ensure it's full width on mobile */
+        max-height: 50vh; /* Limit its height to half the screen */
+        transform: translateY(100%); /* Start off-screen at the bottom */
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .info-panel.open {
+        transform: translateY(0); /* Slide up into view from the bottom */
+    }
+    
+    /* Layer Controls on Mobile */
+    .toggle-layer-controls-button {
+       display: block; /* Make the button visible on mobile */
+        position: absolute;
+        bottom: 20px;
+        left: 20px; /* CORRECTED: Position at the left */
+        right: auto; /* CORRECTED: Remove the right positioning */
+        width: 50px;
+        height: 50px;
+        background-color: #87CEEB;
+        color: white;
+        border: none;
+        border-radius: 8px; /* CORRECTED: Change to a small radius for a square with rounded corners */
+        font-size: 2em;
+        line-height: 1;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+
+    .layer-controls {
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-height: 50vh; /* Limit the height to half the viewport height */
+        border-radius: 8px 8px 0 0; /* Rounded top corners */
+        transform: translateY(100%); /* Start off-screen at the bottom */
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out; /* Add animation */
+    }
+    
+    .layer-controls.open {
+        transform: translateY(0); /* Slide up into view */
+    }
+}
