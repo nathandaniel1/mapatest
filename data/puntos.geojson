@@ -21,7 +21,133 @@
         "type": "Point",
         "coordinates": [-71.6225737059049, -33.59621502851639]
       }
-    },    
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Puerto Viejo, Venezuela",
+        "type": "Landing Point",
+        "shape": "circle",
+        "color": "#2BAB64",
+        "size": 3,
+        "address": "-"
+  },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -62.47759538580638,
+            10.72155556735558
+          ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Buenaventura, Colombia",
+        "type": "Landing Point",
+        "shape": "circle",
+        "color": "#2BAB64",
+        "size": 3,
+        "address": "-"
+  },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -77.07984235853618,
+            3.8861908270169607
+          ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lurin, Perú",
+        "type": "Landing Point",
+        "shape": "circle",
+        "color": "#2BAB64",
+        "size": 3,
+        "address": "-"
+  },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -76.88221806108898,
+            -12.286994742382134
+          ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Fortaleza, Brasil",
+        "type": "Landing Point",
+        "shape": "circle",
+        "color": "#2BAB64",
+        "size": 3,
+        "address": "-"
+  },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -38.50941016554367,
+            -3.720055215982839
+          ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Rio de Janeiro, Brasil",
+        "type": "Landing Point",
+        "shape": "circle",
+        "color": "#2BAB64",
+        "size": 3,
+        "address": "-"
+  },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -43.189050059124185,
+            -22.988088948471045
+          ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Praia Grande, Brasil",
+        "type": "Landing Point",
+        "shape": "circle",
+        "color": "#2BAB64",
+        "size": 3,
+        "address": "-"
+  },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -46.27357491811287,
+            -24.014981802465826
+          ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Las Toninas, Argentina",
+        "type": "Landing Point",
+        "shape": "circle",
+        "color": "#2BAB64",
+        "size": 3,
+        "address": "-"
+  },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -56.696495808697335,
+            -36.461023456118205
+          ]
+      }
+    },     
     {
       "type": "Feature",
       "properties": {
