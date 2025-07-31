@@ -268,7 +268,15 @@ const translationDict = {
     'reference_link': 'Enlace de Referencia',
     'length_km': 'Longitud (km)',
     'image': 'Imagen',
-    'width': 'Ancho'
+    'width': 'Ancho',
+    'año': 'Año',
+    'consultora': 'Consultora',
+    'superficie_predial': 'Superficie Predial',
+    'superficie_construida': 'Superficie Construida',
+    'inversion': 'Inversión',
+    'tipo_de_refrigeracion': 'Tipo de Refrigeración', // Note: Check exact key from GeoJSON
+    'evaluacion_ambiental': 'Evaluación Ambiental',
+    'comuna': 'Comuna' // Added comuna as well for display
 };
 
 const excludedKeys = ['name', 'type', 'shape', 'color', 'size', 'opacity', 'geometry', 'width'];
@@ -338,7 +346,7 @@ map.on('click', function(evt) {
 
             // Adjust maxZoom based on feature type
             if (featureType && (featureType.toLowerCase() === 'point' || featureType.toLowerCase() === 'data center')) {
-                currentMaxZoom = 13; // Less zoom for points/data centers
+                currentMaxZoom = 15; // Less zoom for points/data centers
             } else if (featureType && (featureType.toLowerCase() === 'landing point')) {
                 currentMaxZoom = 13; // Less zoom for landing points
             }
