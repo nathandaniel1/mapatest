@@ -1,6 +1,6 @@
 {
-  "name": "Atlas de la Nubes",
-  "short_name": "Atlas Nubes",
+  "name": "Archivo de Nubes",
+  "short_name": "Archivo Nubes",
   "description": "Un atlas interactivo de infraestructuras de datos en Chile.",
   "start_url": "/mapatest/",
   "display": "standalone",
