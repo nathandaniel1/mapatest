@@ -2,7 +2,7 @@
   "name": "Atlas de la Nubes",
   "short_name": "Atlas Nubes",
   "description": "Un atlas interactivo de infraestructuras de datos en Chile.",
-  "start_url": "/",
+  "start_url": "/mapatest/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#8E6814",
